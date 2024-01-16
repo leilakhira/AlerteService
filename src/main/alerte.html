@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alert Demo</title>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+</head>
+<body>
+
+<script>
+    function showAlert(index) {
+        alert('Fraude détectée à l\'index ' + index);
+    }
+
+    // Effectuer une requête AJAX vers le endpoint Spring Boot
+    $.get("http://localhost:8081/check-fraud", function (predictions) {
+        // Parcourir les prédictions et afficher des alertes pour chaque occurrence de 1
+        for (var i = 0; i < predictions.length; i++) {
+            var prediction = predictions[i];
+            if (prediction === 1) {
+                showAlert(i + 1);
+            }
+        }
+    });
+</script>
+
+</body>
+</html>
