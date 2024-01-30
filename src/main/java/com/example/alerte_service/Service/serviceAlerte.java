@@ -26,7 +26,7 @@ public class serviceAlerte {
     public List<Integer> getPredictions() {
         // Créez les données que vous souhaitez envoyer
         // Définissez cette valeur dans votre fichier application.properties
-        String pythonMicroserviceUrl = "http://127.0.0.1:8003";
+        String pythonMicroserviceUrl = "https://prediction-microservice.azurewebsites.net";
         String pythonEndpoint = pythonMicroserviceUrl + "/prediction_model";
         String filePath = "FraudData.csv";
         // Écrire les données dans le fichier CSV

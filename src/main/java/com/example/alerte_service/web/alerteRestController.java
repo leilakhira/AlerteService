@@ -23,6 +23,7 @@ import java.util.Objects;
 @Controller
 public class alerteRestController{
     private final serviceAlerte service;
+    @Autowired
     private final PurchaseRestController purchaseRestController;
     @Autowired
     public alerteRestController(serviceAlerte service, PurchaseRestController purchaseRestController) {
@@ -32,13 +33,15 @@ public class alerteRestController{
     @GetMapping("/check-fraud")
     public String isFraude(Model model){
         List<Integer> predictions = service.getPredictions();
+        System.out.println(predictions);
         System.out.println("prediction");
         for (int i = 0; i < predictions.size(); i++) {
             Integer prediction = predictions.get(i);
             if (prediction == 1) {
                 // Envoyer un message en cas de fraude
-                Purchase purchase = purchaseRestController.getPurchaseById((long) i);
+                Purchase purchase = purchaseRestController.getPurchaseById((long) i+1);
                 purchase.setClasse(1);
+                purchaseRestController.save(purchase);
             }
         }
         List<Purchase> Fraudpurchases = new ArrayList<>();

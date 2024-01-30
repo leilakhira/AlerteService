@@ -8,6 +8,7 @@ import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.hateoas.PagedModel;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.stereotype.Service;
@@ -22,7 +23,6 @@ public class PurchaseRestController {
     private final RestTemplate restTemplate;
     public PurchaseRestController(RestTemplate restTemplate) {
         this.restTemplate = restTemplate;
-        configureRestTemplate();
     }
     public List<Purchase> getAllPurchases() {
         String url = BASE_URL + "/purchasesList";
@@ -44,22 +44,51 @@ public class PurchaseRestController {
         );
         return responseEntity.getBody();
     }
-    private void configureRestTemplate() {
-        ObjectMapper objectMapper = new ObjectMapper();
-        SimpleModule module = new SimpleModule();
-        module.addDeserializer(Page.class, new PageDeserializer());
-        objectMapper.registerModule(module);
-        restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter(objectMapper));
-    }
     public Purchase getPurchaseById(Long id) {
         String url = BASE_URL + "/purchase/{id}";
-        ResponseEntity<Purchase> responseEntity = restTemplate.exchange(
-                url,
-                org.springframework.http.HttpMethod.GET,
-                null,
-                new ParameterizedTypeReference<Purchase>() {},
-                id
-        );
-        return responseEntity.getBody();
+
+        try {
+            ResponseEntity<Purchase> responseEntity = restTemplate.exchange(
+                    url,
+                    org.springframework.http.HttpMethod.GET,
+                    null,
+                    new ParameterizedTypeReference<Purchase>() {},
+                    id
+            );
+
+            if (responseEntity.getStatusCode().is2xxSuccessful()) {
+                return responseEntity.getBody();
+            } else {
+                // Log the unsuccessful response status
+                System.out.println("Error retrieving Purchase. Status code: " + responseEntity.getStatusCodeValue());
+                return null;
+            }
+        } catch (Exception e) {
+            // Log the exception
+            System.out.println("Error retrieving Purchase: " + e.getMessage());
+            System.out.println("Error retrieving Purchase: ");
+            return null;
+        }
+    }
+    public void save(Purchase purchase) {
+        String url = BASE_URL + "/save";
+        try {
+            ResponseEntity<Purchase> responseEntity = restTemplate.postForEntity(
+                    url,
+                    purchase,
+                    Purchase.class
+            );
+            if (responseEntity.getStatusCode().is2xxSuccessful()){
+                // Successfully saved to the database
+                System.out.println("Purchase saved successfully!");
+            } else {
+                // Log the unsuccessful response status
+                System.out.println("Error saving Purchase. Status code: " + responseEntity.getStatusCodeValue());
+            }
+        } catch (Exception e) {
+            // Log the exception
+            System.out.println("Error saving Purchase: " + e.getMessage());
+        }
     }
 }
+

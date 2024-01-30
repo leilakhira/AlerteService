@@ -15,7 +15,7 @@ public class Purchase{
     private String IpAdress;
     private Date purchase_time = new Date();
     private Date singup_time =new Date(purchase_time.getTime() - 1000);
-    private int classe =0;
+    private int classe;
     private static final String[] SOURCE_OPTIONS = {"SEO", "Ads", "Direct"};
     private static final String[] BROWSER_OPTIONS = {"FireFox", "Chrome", "Safari", "Opera", "IE"};
     private String Source = getRandomSource();
@@ -54,6 +54,22 @@ public class Purchase{
         this.classe = classe;
     }
 
+    public Purchase(Long purchase_id, String first_name, String last_name, Long age, Long purchase_value, Sex sex, String ipAdress, Date purchase_time, Date singup_time, int classe, String source, String browser, String device_id) {
+        this.purchase_id = purchase_id;
+        First_name = first_name;
+        Last_name = last_name;
+        this.age = age;
+        this.purchase_value = purchase_value;
+        this.sex = sex;
+        IpAdress = ipAdress;
+        this.purchase_time = purchase_time;
+        this.singup_time = singup_time;
+        this.classe = classe;
+        Source = source;
+        this.browser = browser;
+        this.device_id = device_id;
+    }
+
     public Purchase() {
     }
     public Long getPurchase_value() {
@@ -84,8 +100,8 @@ public class Purchase{
         return classe;
     }
 
-    public void setClasse(int classe) {
-        this.classe = classe;
+    public void setClasse(int value) {
+        this.classe = value;
     }
 
     public Long getPurchase_id() {
